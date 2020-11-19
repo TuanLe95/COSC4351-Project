@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<head>
+  <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+  <meta charset = "utf-8">
+  <title>Admin Login/ Register</title>
+  <link rel = "stylesheet" href = "admin_login.css">
+  <link href = "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  
+  <div class = "container">
+
+    <!--This form is for the Admin Registeration if there is not already an astablished account-->
+    <form class = "form form--hidden" id = "admin_CreateAccount">
+      <h1 class = "form__title">Admin Registeration</h1>
+      <div class = "form__message form__message--error"></div>
+      
+      <div class = "form__input-group">
+        <input type = "text" class = "form__input" autofocus placeholder = "Name">
+      </div>
+
+      <div class = "form__input-group">
+        <input type = "text" class = "form__input" autofocus placeholder = "Email">
+      </div>
+
+      <div class = "form__input-group">
+        <input type = "password" class = "form__input" autofocus placeholder = "Password">
+      </div>
+
+      <div class = "form__input-group">
+        <input type = "password" class = "form__input" autofocus placeholder = "Admin Role">
+      </div>
+
+
+      <button class = "form__button" type = "submit">Continue</button>
+
+      <p class = "form__text">
+        <a class = "form__link" href = "./" id = "linkadmin_Login">Already have an account? Sign in here</a>
+      </p>
+    </form>
+
+    <!--This form is for login if the user already has an established account-->
+    <form class = "form" id = "admin_Login">
+      <h1 class = "form__title">Login</h1>
+      <div class = "form__message form__message--error"></div>
+      
+      <div class = "form__input-group">
+        <input type = "text" class = "form__input" autofocus placeholder = "Email">
+        <div class = "form__input-error-message"></div>
+      </div>
+
+      <div class = "form__input-group">
+        <input type = "password" class = "form__input" autofocus placeholder = "Password">
+        <div class = "form__input-error-message"></div>
+      </div>
+
+
+      <button class="form__button" type = "submit">Log in</button>
+
+      <p class = "form__text">
+        <a class = "form__link" id = "linkadmin_CreateAccount">New user? Create account here</a>
+      </p>
+    </form>
+  </div>
+
+  <script src = "admin_login.js"></script>
+</body>
