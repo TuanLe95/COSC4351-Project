@@ -24,7 +24,7 @@ module.exports = buildSchema(`
     name: String!
     email: String!
     password: String!
-    role: String!
+    role: String
   }
   type AuthPayLoad {
     token: String

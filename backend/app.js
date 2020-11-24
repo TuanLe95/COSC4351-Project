@@ -9,7 +9,15 @@ const graphQlResolvers = require("./graphql/resolvers")
 const mongooseConnectionString = "mongodb+srv://DBSuser:DBSuser@cluster0.7ldea.mongodb.net/COSC4351?retryWrites=true&w=majority"
 
 app.use(bodyParser.json());
-
+app.use((req,res,next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if(req.method === "OPTIONS"){
+    return res.sendStatus(200);
+  }
+  next();
+})
 
 
 
