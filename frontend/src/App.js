@@ -10,6 +10,7 @@ class App extends React.Component {
     isAuth: false,
     userId: null,
     error: null,
+    role:null,
   }
   loginHandler = (e, authData) => {
     // fetch data
@@ -25,6 +26,7 @@ class App extends React.Component {
             token
             user{
               _id
+              U_role
             }
           }
         }
@@ -48,6 +50,7 @@ class App extends React.Component {
         isAuth: true,
         token: resData.data.logIn.token,
         userId: resData.data.logIn.user._id,
+        role: resData.data.logIn.user.U_role
       })
     })
     .catch(err=>{
@@ -63,13 +66,20 @@ class App extends React.Component {
     //fetch data
     e.preventDefault();
     console.log(authData);
+    let userRole = authData.roles;
+      //authData.roles.forEach(role => {
+      //  if(role.isChecked === true){
+      //    userRole = role.value;
+      //  }
+      //})
     const graphQL_signupMutation = {
       query: `
         mutation {
           signUp(userSignupInput: 
             { name: "${authData.name}", 
               email: "${authData.email}", 
-              password: "${authData.password}"
+              password: "${authData.password}",
+              role: "${userRole}"
             })
           {
             token
@@ -97,10 +107,12 @@ class App extends React.Component {
       if(resData.errors){
         throw new Error("Signup failed!");
       }
+      
       this.setState({
         isAuth: true,
         token: resData.data.signUp.token,
         userId: resData.data.signUp.user._id,
+        role: resData.data.signUp.user.U_role,
       })
     })
     .catch(err => {
@@ -123,7 +135,7 @@ class App extends React.Component {
     if(this.state.isAuth){
       routes = (
         <Switch>
-          <Route exact path="/" render={()=><MainPage/>}/>
+          <Route exact path="/" render={()=><MainPage roles={this.state.role}/>}/>
         </Switch>
       )
     }

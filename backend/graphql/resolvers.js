@@ -14,6 +14,7 @@ async function signUp({userSignupInput}, req){
   const email = userSignupInput.email;
   const password = userSignupInput.password;
   const role = userSignupInput.role;
+  console.log(userSignupInput.role);
   let user = await User.findOne({U_email: email});
   if(user){
     throw new Error("User existed")
@@ -32,6 +33,7 @@ async function signUp({userSignupInput}, req){
     user: newUser
   }
 }
+
 async function logIn({userLoginInput}, req){
   const email = userLoginInput.email;
   const password = userLoginInput.password;

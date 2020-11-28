@@ -26,8 +26,9 @@ class Signup extends React.Component{
       roles: [
         {id: 0, value: "ADMIN", isChecked: false},
         {id: 1, value: "FINANCIAL", isChecked: false}, 
-        {id: 2, value: "TESTER", isChecked: false},
-        {id: 3, value: "DEVELOPER", isChecked: false}, 
+        {id: 2, value: "SALES", isChecked: false},
+        {id: 3, value: "HR", isChecked: false}, 
+        {id: 4, value: "TECH", isChecked: false},
       ],
       isValidForm: false,
     },

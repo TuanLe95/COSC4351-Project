@@ -2,14 +2,23 @@ import React from 'react';
 import './MainPage.css'
 import {NavLink} from 'react-router-dom'
 
-const mainPage = () =>{
+const mainPage = (props) =>{
+  const roleBasedLink = {
+    ADMIN: ["Manage User Account", "Assign Role", "Help Desk"],
+    FINANCIAL: ["Finance Report", "Accounts Payable", "Accounts Receivable", "Tax"],
+    SALES: ["Sales Reports", "Sales Leads", "Sales Demo"],
+    HR: ["New Hire On-boarding", "Benefits", "Payroll", "Off-boarding", "HR Reports"],
+    TECH: ["Application Monitoring", "Tech Support", "App Development", "App Admin", "Release Management"],
+  }
   return(
     <div>
-      <NavLink to="/1">1</NavLink>
-      <NavLink to="/2">2</NavLink>
-      <NavLink to="/3">3</NavLink>
-      <NavLink to="/4">4</NavLink>
-      <NavLink to="/5">5</NavLink>
+      <NavLink to="/1">Yes it is working</NavLink>
+      {console.log(props)};
+      {props.roles.map(role => {
+        return roleBasedLink[role].map(linkName => {
+          return (<NavLink style={{display: "block"}} key={linkName} to={`/${linkName}`}>{linkName}</NavLink>)
+        })
+      })}
     </div>
 
   )

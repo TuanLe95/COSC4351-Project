@@ -14,7 +14,7 @@ module.exports = buildSchema(`
     U_name: String!
     U_email: String!
     U_password: String
-    U_role: String
+    U_role: [String]
   }
   input UserLoginData{
     email: String!
@@ -24,7 +24,7 @@ module.exports = buildSchema(`
     name: String!
     email: String!
     password: String!
-    role: String
+    role: [String]
   }
   type AuthPayLoad {
     token: String
