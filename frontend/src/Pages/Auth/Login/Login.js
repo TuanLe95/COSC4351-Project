@@ -1,7 +1,8 @@
 import React from 'react';
 import "./Login.css"
 import Input from '../../../Components/Input/Input'
-
+import {Link} from "react-router-dom"
+import {required, length} from '../../../Utils/validators'
 class Login extends React.Component{
   state = {
     loginForm: {
@@ -9,28 +10,41 @@ class Login extends React.Component{
         value: "",
         valid: false,
         touched: false,
-        validators: []
+        validators: [required]
       },
       password: {
         value: "",
         valid: false,
         touched: false,
-        validators: []
+        validators: [length({min: 5})]
       },
-      isValidForm: false,
+      isFormValid: false,
     },
   }
 
   inputOnChangeHandler = (input, e) => {
     this.setState((prevState)=>{
+      let isValid = true;
+      for (const validator of prevState.loginForm[input].validators){
+        isValid = isValid && validator(e.target.value);
+      }
       const updatedForm = {
         ...prevState.loginForm,
         [input]: {
           ...prevState.loginForm[input],
           value: e.target.value,
+          valid: isValid,
         }
       }
-      return {loginForm: updatedForm}
+      console.log(input, updatedForm[input].valid);
+      let isValidForm = true;
+      for (const inputName in updatedForm){
+        isValidForm = isValidForm && inputName.valid;
+      }
+      return {
+        loginForm: updatedForm,
+        isFormValid: isValidForm
+      }
     })
   }
   inputOnBlurHandler = (input) => {
@@ -47,12 +61,13 @@ class Login extends React.Component{
   }
   render(){
     return(
-      <div className="">
-        <form className="" onSubmit={e => this.props.loginHandler(e, {
+      <div className="login__container">
+        <form className="form" onSubmit={e => this.props.loginHandler(e, {
           email: this.state.loginForm.email.value,
           password: this.state.loginForm.password.value,
         })}>
-          <h1 className="form__title">Admin Login</h1>
+          <h1 className="form__title">Login</h1>
+          {this.props.error &&  <p className="error__text">{this.props.error.message}</p>}
           <Input 
             id="email"
             type="text"
@@ -61,6 +76,8 @@ class Login extends React.Component{
             value={this.state.loginForm.email.value}
             inputOnChangeHandler={this.inputOnChangeHandler}
             inputOnBlurHandler={this.inputOnBlurHandler}
+            valid={this.state.loginForm.email.valid}
+            touched={this.state.loginForm.email.touched}
           />
           <Input
             id="password"
@@ -70,8 +87,11 @@ class Login extends React.Component{
             value={this.state.loginForm.password.value}
             inputOnChangeHandler={this.inputOnChangeHandler}
             inputOnBlurHandler={this.inputOnBlurHandler}
+            valid={this.state.loginForm.password.valid}
+            touched={this.state.loginForm.password.touched}
           />
-          <button type="submit">Submit</button>
+          <button className="form__button" type="submit">Login</button>
+          <Link className="form__text" to="/signup">New user? Create account here</Link>
         </form>
       </div>
     )

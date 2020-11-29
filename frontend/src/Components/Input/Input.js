@@ -6,7 +6,11 @@ const input = (props) => (
     {props.label && <label htmlFor={props.id}>{props.label}</label>}
     {props.control === "input" && (
       <input
-        className=""
+        className={[
+          "form__input", 
+          !props.valid ? "invalid" : "valid",
+          props.touched ? "touched" : "untouched"
+        ].join(" ")}
         id={props.id}
         type={props.type}
         name={props.name}

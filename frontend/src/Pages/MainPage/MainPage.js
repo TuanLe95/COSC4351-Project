@@ -12,12 +12,14 @@ const mainPage = (props) =>{
   }
   return(
     <div>
-      <NavLink to="/1">Yes it is working</NavLink>
-      {console.log(props)};
+      <p>You are logged in as {props.roles.length > 1 ? props.roles.map(role=> role + ", ") : props.roles[0]}</p>
       {props.roles.map(role => {
-        return roleBasedLink[role].map(linkName => {
-          return (<NavLink style={{display: "block"}} key={linkName} to={`/${linkName}`}>{linkName}</NavLink>)
-        })
+        return (
+          
+          roleBasedLink[role].map(linkName => {
+          return (<NavLink className="link" style={{display: "block"}} key={linkName} to={`/${linkName}`}>{linkName}</NavLink>)
+          })
+        )
       })}
     </div>
 

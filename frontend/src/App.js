@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css';
-import {Switch, Route, Redirect} from 'react-router-dom'
+import {Switch, Route, Redirect, withRouter} from 'react-router-dom'
 import Signup from './Pages/Auth/Signup/Signup';
 import Login from "./Pages/Auth/Login/Login"
 import MainPage from './Pages/MainPage/MainPage';
@@ -43,14 +43,15 @@ class App extends React.Component {
     .then(resData => {
       console.log("resData: ", resData);
       if(resData.errors){
-        throw new Error("Login failed!");
+        throw new Error(resData.errors[0].message);
       }
 
       this.setState({
         isAuth: true,
         token: resData.data.logIn.token,
         userId: resData.data.logIn.user._id,
-        role: resData.data.logIn.user.U_role
+        role: resData.data.logIn.user.U_role,
+        error: null,
       })
     })
     .catch(err=>{
@@ -66,57 +67,54 @@ class App extends React.Component {
     //fetch data
     e.preventDefault();
     console.log(authData);
-    let userRole = authData.roles;
-      //authData.roles.forEach(role => {
-      //  if(role.isChecked === true){
-      //    userRole = role.value;
-      //  }
-      //})
-    const graphQL_signupMutation = {
+    let userRole = [];
+    authData.roles.forEach(role => {
+    if(role.isChecked === true){
+        userRole.push(role.value);
+      }
+    })
+    const graphQL_signupMutation1 = {
       query: `
-        mutation {
-          signUp(userSignupInput: 
-            { name: "${authData.name}", 
-              email: "${authData.email}", 
-              password: "${authData.password}",
-              role: "${userRole}"
-            })
-          {
-            token
-            user{
-              _id
-              U_name
-              U_email
-            }
+      mutation createUser($inputName: String!, $inputEmail: String!, $inputPassword: String!, $inputRoles: [String] ){
+        signUp(userSignupInput: {name: $inputName, email: $inputEmail, password: $inputPassword, role: $inputRoles}){
+          token
+          user{
+            _id
+            U_name
+            U_email
           }
         }
-      `
+      }
+      ` ,
+      variables: {
+        inputName: authData.name,
+        inputEmail: authData.email,
+        inputPassword: authData.password,
+        inputRoles: userRole
+      }
     }
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
         "Content-Type" : "application/json",
       },
-      body: JSON.stringify(graphQL_signupMutation)
+      body: JSON.stringify(graphQL_signupMutation1)
     })
     .then(res => res.json())
     .then(resData => {
-      if(resData.errors && resData.errors[0].status === 422){
-        throw new Error("Signup failed");
-      }
       if(resData.errors){
-        throw new Error("Signup failed!");
+        throw new Error(resData.errors[0].message);
       }
-      
       this.setState({
-        isAuth: true,
         token: resData.data.signUp.token,
         userId: resData.data.signUp.user._id,
         role: resData.data.signUp.user.U_role,
-      })
+        error: null
+      });
+      this.props.history.replace("/");
     })
     .catch(err => {
-      console.log(e); 
+      console.log(err);
       this.setState({
         isAuth: false,
         error: err,
@@ -127,8 +125,8 @@ class App extends React.Component {
   render(){
     let routes = (
       <Switch>
-        <Route exact path="/" render={()=><Login loginHandler={this.loginHandler}/>}/>
-        <Route exact path="/signup" render={()=> <Signup signupHandler={this.signupHandler}/>}/>
+        <Route exact path="/" render={()=><Login error={this.state.error} loginHandler={this.loginHandler}/>}/>
+        <Route exact path="/signup" render={()=> <Signup error={this.state.error} signupHandler={this.signupHandler}/>}/>
         <Redirect to ="/"/>
       </Switch>
     )
@@ -140,7 +138,7 @@ class App extends React.Component {
       )
     }
     return (
-      <div className="App">
+      <div className="body">
         {routes}
       </div>
     );
@@ -148,4 +146,4 @@ class App extends React.Component {
   
 }
 
-export default App;
+export default withRouter(App);
