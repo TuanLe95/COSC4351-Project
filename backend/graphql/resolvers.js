@@ -14,6 +14,13 @@ async function signUp({userSignupInput}, req){
   const email = userSignupInput.email;
   const password = userSignupInput.password;
   const role = userSignupInput.role;
+  
+  if(email === ""){
+    throw new Error("User name cannot be null!")
+  }
+  if(password.length < 5){
+    throw new Error("Password must be at least 5 chars")
+  }
   console.log(userSignupInput.role);
   let user = await User.findOne({U_email: email});
   if(user){
@@ -36,7 +43,13 @@ async function signUp({userSignupInput}, req){
 
 async function logIn({userLoginInput}, req){
   const email = userLoginInput.email;
+  if(email === ""){
+    throw new Error("User name cannot be null!")
+  }
   const password = userLoginInput.password;
+  if(password.length < 5){
+    throw new Error("Password must be at least 5 chars")
+  }
   const user = await User.findOne({U_email: email});
   if(!user){
     throw new Error("User not found");
